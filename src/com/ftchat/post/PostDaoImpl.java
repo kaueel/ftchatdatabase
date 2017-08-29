@@ -1,10 +1,6 @@
 package com.ftchat.post;
 
 import com.ftchat.dao.DaoOwner;
-import javafx.geometry.Pos;
-import jdk.internal.cmm.SystemResourcePressureImpl;
-
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
