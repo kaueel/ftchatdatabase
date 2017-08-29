@@ -1,16 +1,14 @@
 package com.ftchat.dao;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class DaoOwner {
     private Connection connect = null;
     private Statement statement = null;
-    private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
-    protected ArrayList executeQuery(String query) throws Exception {
+    protected ArrayList<Map<String, String>> executeQuery(String query) throws Exception {
         try {
             // This will load the MySQL driver, each DB has its own driver
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -27,13 +25,16 @@ public class DaoOwner {
             // Result set get the result of the SQL query
             resultSet = statement.executeQuery(query);
 
-            ArrayList response = new ArrayList<>();
+            ArrayList<Map<String, String>> response = new ArrayList<>();
+            String columnName;
 
             while (resultSet.next()){
                 int columns = resultSet.getMetaData().getColumnCount();
-                ArrayList row = new ArrayList<>();
-                for (int i = 1; i <= columns; i++)
-                    row.add(resultSet.getString(i));
+                Map<String, String> row = new HashMap<>();
+                for (int i = 1; i <= columns; i++) {
+                    columnName = resultSet.getMetaData().getColumnName(i);
+                    row.put(columnName, resultSet.getString(i));
+                }
                 response.add(row);
             }
 
