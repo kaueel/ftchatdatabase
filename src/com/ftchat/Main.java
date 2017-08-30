@@ -12,6 +12,8 @@ public class Main {
 
         for (User user : users) System.out.println(user.toString());
 
+        System.out.println("----- TESTES DE USUARIO UNITARIO -----");
+
         User testUser = userDao.createUser("test", "123");
         System.out.println(testUser.toString());
 
@@ -42,11 +44,7 @@ public class Main {
 
         testUser.setName("testUpdated");
 
-        try {
-            userDao.updateUser(testUser);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        userDao.updateUser(testUser);
 
         try {
             userDao.deleteUser(testUser);

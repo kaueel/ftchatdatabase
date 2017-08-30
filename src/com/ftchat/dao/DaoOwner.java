@@ -8,6 +8,7 @@ import java.util.*;
 public class DaoOwner {
     private Connection connect = null;
     private Statement statement = null;
+    private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
     protected ArrayList<Map<String, String>> executeQuery(String query) throws Exception {
@@ -30,7 +31,7 @@ public class DaoOwner {
             ArrayList<Map<String, String>> response = new ArrayList<>();
             String columnName;
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 int columns = resultSet.getMetaData().getColumnCount();
                 Map<String, String> row = new HashMap<>();
                 for (int i = 1; i <= columns; i++) {
@@ -50,7 +51,7 @@ public class DaoOwner {
         }
     }
 
-    protected int executeUpdate(String query) throws Exception{
+    protected int executeUpdate(String query) throws Exception {
         try {
             // This will load the MySQL driver, each DB has its own driver
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -61,11 +62,11 @@ public class DaoOwner {
                             "user=ftchat@ftchat;password=Rootadmin123;encrypt=true;trustServerCertificate=false;" +
                             "hostNameInCertificate=*.database.windows.net;loginTimeout=30;");
 
-            // Statements allow to issue SQL queries to the database
             statement = connect.createStatement();
-
-            // Result set get the result of the SQL query
-            return statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+            int effectedRows = statement.executeUpdate(query);
+            if (effectedRows > 0)
+                return effectedRows;
+            else throw new Exception("dbUpdateFail");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("dbConnectionError");
@@ -88,6 +89,10 @@ public class DaoOwner {
 
             if (connect != null) {
                 connect.close();
+            }
+
+            if (preparedStatement != null) {
+                preparedStatement.close();
             }
         } catch (Exception e) {
             System.out.println("Houve um erro ao finalizar a conexão ao banco de dados");

@@ -27,22 +27,22 @@ public class UserDaoImpl extends DaoOwner implements UserDao {
         return response;
     }
 
+    @Override
     public User createUser(String name, String password) throws Exception {
         try {
-            int userId = this.executeUpdate("EXEC AddUser @name = '" + name + "', @password = '" + password + "'");
-            if (userId <= 0)
-                throw new Exception("dbUpdateFail");
-            else return new User(userId, name);
+            ArrayList<Map<String, String>> preId = this.executeQuery("EXEC AddUser @name = '" + name + "', @password = '" + password + "'");
+            return new User(Integer.parseInt(preId.get(0).get("id")), name);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new Exception("dbUpdateFail");
         }
     }
 
+    @Override
     public User authUser(String name, String password) throws Exception {
         try {
-            ArrayList<Map<String, String>> preUser = this.executeQuery("EXEC SelectUser @name = '" + name + "', @password = " + password + "'");
-            return new User(Integer.parseInt(preUser.get(0).get("id")), name, password);
+            ArrayList<Map<String, String>> preUser = this.executeQuery("EXEC SelectUser @name = '" + name + "', @password = '" + password + "'");
+            return new User(Integer.parseInt(preUser.get(0).get("id")), name);
         } catch (Exception e) {
             throw new Exception("authFail");
         }
@@ -61,7 +61,7 @@ public class UserDaoImpl extends DaoOwner implements UserDao {
     @Override
     public User getUserByName(String name) throws Exception {
         try {
-            ArrayList<Map<String, String>> preUser = this.executeQuery("select id from [user] where name =" + name);
+            ArrayList<Map<String, String>> preUser = this.executeQuery("select id from [user] where name ='" + name + "'");
             return new User(Integer.parseInt(preUser.get(0).get("id")), name);
         } catch (Exception e) {
             throw new Exception("dbNotFound");
@@ -71,9 +71,10 @@ public class UserDaoImpl extends DaoOwner implements UserDao {
     @Override
     public boolean updateUser(User user) throws Exception {
         try {
-            if (this.executeUpdate("update [user] set name = '" + user.getName() + "' where id = " + Integer.toString(user.getId())) == 0)
-                throw new Exception("dbNotFound");
-            else return true;
+            int effectedRows = this.executeUpdate("update [user] set name = '" + user.getName() + "' where id = " + Integer.toString(user.getId()));
+            if (effectedRows > 0)
+                return true;
+            else throw new Exception("dbNotFound");
         } catch (Exception e) {
             throw new Exception("dbUpdateFail");
         }
