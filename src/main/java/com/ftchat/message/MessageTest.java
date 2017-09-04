@@ -24,8 +24,6 @@ public class MessageTest {
     @Test
     public void getMessagesSentAfterADate() throws Exception {
         MessageDaoImpl messageDao = new MessageDaoImpl();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = dateFormat.parse("01/01/2017");
         List<Message> messages = messageDao.getMessagesSentAfterAId(1, 2, 1);
 
         assertNotNull(messages);
@@ -35,9 +33,7 @@ public class MessageTest {
     @Test
     public void createMessage() throws Exception {
         MessageDaoImpl messageDao = new MessageDaoImpl();
-        Message message = new Message(1, 2, "test");
-        messageDao.sendMessage(message);
-
+        Message message = messageDao.sendMessage(new Message(1, 2, "test"));
         assertNotSame(message.getId(), 0);
 
         messageDao.deleteMessage(message);
@@ -46,8 +42,7 @@ public class MessageTest {
     @Test
     public void deleteMessage() throws Exception {
         MessageDaoImpl messageDao = new MessageDaoImpl();
-        Message message = new Message(1, 2, "test");
-        messageDao.sendMessage(message);
+        Message message = messageDao.sendMessage(new Message(1, 2, "test"));
 
         assertTrue(messageDao.deleteMessage(message));
     }

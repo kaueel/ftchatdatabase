@@ -2,11 +2,7 @@ package com.ftchat.message;
 
 import com.ftchat.dao.DaoOwner;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
