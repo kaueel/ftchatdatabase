@@ -1,7 +1,5 @@
 package com.ftchat.message;
 
-import java.sql.Date;
-
 public class Message {
     private int id;
     private int sender;

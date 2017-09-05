@@ -1,9 +1,9 @@
 package com.ftchat.dao;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DaoOwner {
     private Connection connect = null;
