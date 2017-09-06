@@ -1,13 +1,26 @@
 package com.ftchat;
 
-import com.ftchat.message.Message;
-import com.ftchat.message.MessageDao;
-import com.ftchat.message.MessageDaoImpl;
+import com.ftchat.message.MessageTest;
+import org.junit.experimental.ParallelComputer;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        MessageDaoImpl messageDao = new MessageDaoImpl();
-        Message message = new Message(1, 2, "teste em java");
-        System.out.println(messageDao.sendMessageWithLambdaFunction(message).toString());
+        Class[] cls = {MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
+                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
+                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
+                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
+                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
+                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
+                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
+                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
+                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
+                MessageTest.class, MessageTest.class, MessageTest.class,};
+
+        Result result = JUnitCore.runClasses(new ParallelComputer(true, true), cls);
+        System.out.println("Falhas: " + result.getFailureCount());
+        System.out.println("Testes: " + result.getRunCount());
+        System.out.println(result.toString());
     }
 }

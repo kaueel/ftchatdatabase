@@ -56,8 +56,10 @@ public class MessageTest {
     @Test
     public void exportMessages() throws Exception{
         MessageDaoImpl messageDao = new MessageDaoImpl();
-        messageDao.exportMessages(1, 2);
+        String filename = messageDao.exportMessages(1, 2);
 
-        assertTrue(true);
+        assertNotNull(filename);
+
+        messageDao.deleteExportFile(filename);
     }
 }

@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.squareup.okhttp.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -23,10 +24,9 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
     @Override
     public List<Message> getAllMessagesFromChat(int sender, int receiver) throws Exception {
         ArrayList<Map<String, String>> preMessages =
-                this.executeQuery("select id,sender,receiver,content,send_date from [message] where " +
-                        "(sender =" + Integer.toString(sender) +
-                        " and receiver =" + Integer.toString(receiver) + ") or (sender =" + Integer.toString(receiver) +
-                        " and receiver =" + Integer.toString(sender) + ")");
+                this.executeQuery("EXEC GetMessages " +
+                        "@sender =" + Integer.toString(sender) + ", " +
+                        "@receiver = " + Integer.toString(receiver));
 
         List<Message> response = new ArrayList<>();
 
@@ -48,10 +48,10 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
     @Override
     public List<Message> getMessagesSentAfterAId(int sender, int receiver, int id) throws Exception {
         ArrayList<Map<String, String>> preMessages =
-                this.executeQuery("select id,sender,receiver,content,send_date from [message] where " +
-                        "sender =" + Integer.toString(sender) +
-                        "and receiver =" + Integer.toString(receiver) +
-                        "and id >" + Integer.toString(id));
+                this.executeQuery("EXEC GetMessagesAfterAId " +
+                        "@sender = " + Integer.toString(sender) + ", " +
+                        "@receiver = " + Integer.toString(receiver) + ", " +
+                        "@lastIdMessage = " + Integer.toString(id) + "");
 
         List<Message> response = new ArrayList<>();
 
@@ -73,8 +73,8 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
     @Override
     public Message sendMessage(Message message) throws Exception {
         ArrayList<Map<String, String>> preId =
-                this.executeQuery("EXEC AddMessage @sender =" + Integer.toString( message.getSender() ) +
-                        ", @receiver =" + Integer.toString( message.getReceiver() ) +
+                this.executeQuery("EXEC AddMessage @sender =" + Integer.toString(message.getSender()) +
+                        ", @receiver =" + Integer.toString(message.getReceiver()) +
                         ", @content = '" + message.getContent() + "'");
 
         return new Message(
@@ -127,7 +127,7 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
     }
 
     @Override
-    public void exportMessages(int sender, int receiver) throws Exception{
+    public String exportMessages(int sender, int receiver) throws Exception {
         List<Message> messages = this.getAllMessagesFromChat(sender, receiver);
 
         if (!messages.isEmpty()) {
@@ -147,9 +147,20 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
                 });
 
                 writer.close();
+
+                return filename;
             } catch (IOException ioe) {
                 System.out.println("IOException");
             }
+        } else {
+            throw new Exception("noMessagesToExport");
         }
+
+        return null;
+    }
+
+    @Override
+    public boolean deleteExportFile(String filename) throws Exception {
+        return new File(filename).delete();
     }
 }
