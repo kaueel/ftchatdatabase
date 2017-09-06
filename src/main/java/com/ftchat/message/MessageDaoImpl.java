@@ -1,15 +1,20 @@
 package com.ftchat.message;
 
 import com.ftchat.dao.DaoOwner;
+import com.ftchat.user.User;
+import com.ftchat.user.UserDaoImpl;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.squareup.okhttp.*;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class MessageDaoImpl extends DaoOwner implements MessageDao {
     private final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
@@ -18,16 +23,18 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
     @Override
     public List<Message> getAllMessagesFromChat(int sender, int receiver) throws Exception {
         ArrayList<Map<String, String>> preMessages =
-                this.executeQuery("select id,content,send_date from [message] where sender =" + Integer.toString(sender) +
-                        "and receiver =" + Integer.toString(receiver));
+                this.executeQuery("select id,sender,receiver,content,send_date from [message] where " +
+                        "(sender =" + Integer.toString(sender) +
+                        " and receiver =" + Integer.toString(receiver) + ") or (sender =" + Integer.toString(receiver) +
+                        " and receiver =" + Integer.toString(sender) + ")");
 
         List<Message> response = new ArrayList<>();
 
         preMessages.forEach((Map<String, String> messageRow) -> {
             Message message = new Message(
                     Integer.parseInt(messageRow.get("id")),
-                    sender,
-                    receiver,
+                    Integer.parseInt(messageRow.get("sender")),
+                    Integer.parseInt(messageRow.get("receiver")),
                     messageRow.get("content"),
                     messageRow.get("send_date")
 
@@ -41,7 +48,8 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
     @Override
     public List<Message> getMessagesSentAfterAId(int sender, int receiver, int id) throws Exception {
         ArrayList<Map<String, String>> preMessages =
-                this.executeQuery("select id,content,send_date from [message] where sender =" + Integer.toString(sender) +
+                this.executeQuery("select id,sender,receiver,content,send_date from [message] where " +
+                        "sender =" + Integer.toString(sender) +
                         "and receiver =" + Integer.toString(receiver) +
                         "and id >" + Integer.toString(id));
 
@@ -50,8 +58,8 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
         preMessages.forEach((Map<String, String> messageRow) -> {
             Message message = new Message(
                     Integer.parseInt(messageRow.get("id")),
-                    sender,
-                    receiver,
+                    Integer.parseInt(messageRow.get("sender")),
+                    Integer.parseInt(messageRow.get("receiver")),
                     messageRow.get("content"),
                     messageRow.get("send_date")
 
@@ -116,5 +124,32 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
         if (this.executeUpdate("delete from [message] where id =" + Integer.toString(message.getId())) == 0)
             throw new Exception("dbNotFound");
         else return true;
+    }
+
+    @Override
+    public void exportMessages(int sender, int receiver) throws Exception{
+        List<Message> messages = this.getAllMessagesFromChat(sender, receiver);
+
+        if (!messages.isEmpty()) {
+            UserDaoImpl userDao = new UserDaoImpl();
+            User userBySender = userDao.getUserById(sender);
+            User userByReceiver = userDao.getUserById(receiver);
+            try {
+                Random rand = new Random();
+                String filename = "export" + Integer.toString(rand.nextInt(Integer.MAX_VALUE)) + ".txt";
+                PrintWriter writer = new PrintWriter(filename, "UTF-8");
+
+                messages.forEach(message -> {
+                    if (message.getSender() == sender)
+                        writer.println(userBySender.getName() + ": " + message.getContent() + " -" + message.getDate());
+                    else
+                        writer.println(userByReceiver.getName() + ": " + message.getContent() + " -" + message.getDate());
+                });
+
+                writer.close();
+            } catch (IOException ioe) {
+                System.out.println("IOException");
+            }
+        }
     }
 }

@@ -8,4 +8,5 @@ public interface MessageDao {
     public Message sendMessage(Message message) throws Exception;
     public Message sendMessageWithLambdaFunction(Message message) throws Exception;
     public boolean deleteMessage(Message message) throws Exception;
+    public void exportMessages(int sender, int receiver) throws Exception;
 }

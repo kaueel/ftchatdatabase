@@ -52,4 +52,12 @@ public class MessageTest {
 
         assertTrue(messageDao.deleteMessage(message));
     }
+
+    @Test
+    public void exportMessages() throws Exception{
+        MessageDaoImpl messageDao = new MessageDaoImpl();
+        messageDao.exportMessages(1, 2);
+
+        assertTrue(true);
+    }
 }
