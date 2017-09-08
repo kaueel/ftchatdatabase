@@ -1,11 +1,14 @@
 package com.ftchat.dao;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.sql.*;
 import java.util.*;
 
 public class DaoOwner {
     private Connection connect = null;
     private Statement statement = null;
+    private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
     protected ArrayList<Map<String, String>> executeQuery(String query) throws Exception {
@@ -28,7 +31,7 @@ public class DaoOwner {
             ArrayList<Map<String, String>> response = new ArrayList<>();
             String columnName;
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 int columns = resultSet.getMetaData().getColumnCount();
                 Map<String, String> row = new HashMap<>();
                 for (int i = 1; i <= columns; i++) {
@@ -41,7 +44,32 @@ public class DaoOwner {
             //Return the resultSet
             return response;
         } catch (Exception e) {
-            System.out.println("Houve um erro ao efetuar conexão ao banco de dados");
+            System.out.println("dbConnectionError");
+            throw e;
+        } finally {
+            close();
+        }
+    }
+
+    protected int executeUpdate(String query) throws Exception {
+        try {
+            // This will load the MySQL driver, each DB has its own driver
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+
+            // Setup the connection with the DB
+            connect = DriverManager
+                    .getConnection("jdbc:sqlserver://ftchat.database.windows.net:1433;database=ftchatdb;" +
+                            "user=ftchat@ftchat;password=Rootadmin123;encrypt=true;trustServerCertificate=false;" +
+                            "hostNameInCertificate=*.database.windows.net;loginTimeout=30;");
+
+            statement = connect.createStatement();
+            int effectedRows = statement.executeUpdate(query);
+            if (effectedRows > 0)
+                return effectedRows;
+            else throw new Exception("dbUpdateFail");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("dbConnectionError");
             throw e;
         } finally {
             close();
@@ -61,6 +89,10 @@ public class DaoOwner {
 
             if (connect != null) {
                 connect.close();
+            }
+
+            if (preparedStatement != null) {
+                preparedStatement.close();
             }
         } catch (Exception e) {
             System.out.println("Houve um erro ao finalizar a conexão ao banco de dados");
