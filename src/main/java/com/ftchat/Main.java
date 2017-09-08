@@ -1,26 +1,23 @@
 package com.ftchat;
 
-import com.ftchat.message.MessageTest;
-import org.junit.experimental.ParallelComputer;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class Main {
-    public static void main(String[] args) throws Exception {
-        Class[] cls = {MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class,};
+public class Main extends Application {
 
-        Result result = JUnitCore.runClasses(new ParallelComputer(true, true), cls);
-        System.out.println("Falhas: " + result.getFailureCount());
-        System.out.println("Testes: " + result.getRunCount());
-        System.out.println(result.toString());
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        Parent root = FXMLLoader.load(getClass().getResource("login/login.fxml"));
+        primaryStage.setTitle("Hello World");
+        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.show();
+    }
+
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }
