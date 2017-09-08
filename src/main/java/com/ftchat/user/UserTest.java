@@ -1,13 +1,12 @@
 package com.ftchat.user;
 
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Test;
+
 import java.util.List;
+
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.*;
 
 public class UserTest {
 

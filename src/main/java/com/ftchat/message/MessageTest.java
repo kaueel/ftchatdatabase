@@ -3,13 +3,10 @@ package com.ftchat.message;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 public class MessageTest {
     @Test
@@ -31,9 +28,18 @@ public class MessageTest {
     }
 
     @Test
-    public void createMessage() throws Exception {
+    public void sendMessage() throws Exception {
         MessageDaoImpl messageDao = new MessageDaoImpl();
         Message message = messageDao.sendMessage(new Message(1, 2, "test"));
+        assertNotSame(message.getId(), 0);
+
+        messageDao.deleteMessage(message);
+    }
+
+    @Test
+    public void sendMessageWithLambdaFunction() throws Exception {
+        MessageDaoImpl messageDao = new MessageDaoImpl();
+        Message message = messageDao.sendMessageWithLambdaFunction(new Message(1, 2, "test"));
         assertNotSame(message.getId(), 0);
 
         messageDao.deleteMessage(message);
@@ -45,5 +51,15 @@ public class MessageTest {
         Message message = messageDao.sendMessage(new Message(1, 2, "test"));
 
         assertTrue(messageDao.deleteMessage(message));
+    }
+
+    @Test
+    public void exportMessages() throws Exception{
+        MessageDaoImpl messageDao = new MessageDaoImpl();
+        String filename = messageDao.exportMessages(1, 2);
+
+        assertNotNull(filename);
+
+        messageDao.deleteExportFile(filename);
     }
 }
