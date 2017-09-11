@@ -1,5 +1,6 @@
 package com.ftchat.backend.message;
 
+import com.ftchat.backend.dao.ConnectionHandler;
 import com.ftchat.backend.dao.DaoOwner;
 import com.ftchat.backend.user.User;
 import com.ftchat.backend.user.UserDaoImpl;
@@ -12,6 +13,7 @@ import com.squareup.okhttp.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +23,14 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
     private final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
     private final String SEND_MESSAGE_URL = "https://us-central1-copper-index-179013.cloudfunctions.net/sendMessage";
 
+    public MessageDaoImpl(Connection conn) {
+        super(conn);
+    }
+
     @Override
     public List<Message> getAllMessagesFromChat(int sender, int receiver) throws Exception {
         ArrayList<Map<String, String>> preMessages =
-                this.executeQueryWithGoogleCloud("call GetMessages(" + Integer.toString(sender) + ", " + Integer.toString(receiver) + ");");
+                this.executeQuery("call GetMessages(" + Integer.toString(sender) + ", " + Integer.toString(receiver) + ");");
 
         List<Message> response = new ArrayList<>();
 
@@ -46,7 +52,7 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
     @Override
     public List<Message> getMessagesSentAfterAId(int sender, int receiver, int id) throws Exception {
         ArrayList<Map<String, String>> preMessages =
-                this.executeQueryWithGoogleCloud("CALL GetMessagesAfterAId (" + Integer.toString(sender) + ", "
+                this.executeQuery("CALL GetMessagesAfterAId (" + Integer.toString(sender) + ", "
                         + Integer.toString(receiver) + ", " + Integer.toString(id) + ");");
 
         List<Message> response = new ArrayList<>();
@@ -69,7 +75,7 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
     @Override
     public Message sendMessage(Message message) throws Exception {
         ArrayList<Map<String, String>> preId =
-                this.executeQueryWithGoogleCloud("CALL AddMessage (" + Integer.toString(message.getSender()) +
+                this.executeQuery("CALL AddMessage (" + Integer.toString(message.getSender()) +
                         ", " + Integer.toString(message.getReceiver()) +
                         ", '" + message.getContent() + "');");
 
@@ -118,7 +124,7 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
     @Override
     public boolean deleteMessage(Message message) throws Exception {
         ArrayList<Map<String, String>> preRowsModified =
-                this.executeQueryWithGoogleCloud("CALL DeleteMessage (" + Integer.toString(message.getId()) + ");");
+                this.executeQuery("CALL DeleteMessage (" + Integer.toString(message.getId()) + ");");
         if (Integer.parseInt(preRowsModified.get(0).get("rows_count")) > 0)
             return true;
         else throw new Exception("dbNotFound");
@@ -127,9 +133,10 @@ public class MessageDaoImpl extends DaoOwner implements MessageDao {
     @Override
     public String exportMessages(int sender, int receiver) throws Exception {
         List<Message> messages = this.getAllMessagesFromChat(sender, receiver);
+        Connection azureConnection = new ConnectionHandler().getAzureConnectionInstance();
 
         if (!messages.isEmpty()) {
-            UserDaoImpl userDao = new UserDaoImpl();
+            UserDaoImpl userDao = new UserDaoImpl(azureConnection);
             User userBySender = userDao.getUserById(sender);
             User userByReceiver = userDao.getUserById(receiver);
             try {

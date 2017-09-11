@@ -2,11 +2,16 @@ package com.ftchat.backend.user;
 
 import com.ftchat.backend.dao.DaoOwner;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class UserDaoImpl extends DaoOwner implements UserDao {
+
+    public UserDaoImpl(Connection conn) {
+        super(conn);
+    }
 
     /**
      * Get all the posts from the user table
