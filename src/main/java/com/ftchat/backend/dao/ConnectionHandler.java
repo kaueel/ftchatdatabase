@@ -30,10 +30,12 @@ public class ConnectionHandler {
     }
 
     public Connection getGoogleChromeCloudConnectionInstance() throws Exception {
-        if (!this.googleChromeCloudConnectionInstance.isClosed())
+        if (!this.googleChromeCloudConnectionInstance.isClosed()) {
             return this.googleChromeCloudConnectionInstance;
-        else
-            return this.getGoogleCloudConnection();
+        } else {
+            this.googleChromeCloudConnectionInstance = this.getGoogleCloudConnection();
+            return this.googleChromeCloudConnectionInstance;
+        }
     }
 
     public Connection getAzureConnectionInstance() throws Exception {
