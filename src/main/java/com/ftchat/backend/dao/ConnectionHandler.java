@@ -9,7 +9,7 @@ public class ConnectionHandler {
 
     public ConnectionHandler() throws Exception {
         this.azureConnectionInstance = this.getAzureConnection();
-        this.googleChromeCloudConnectionInstance = this.getGoogleCloudConnection();
+        //this.googleChromeCloudConnectionInstance = this.getGoogleCloudConnection();
     }
 
     private Connection getAzureConnection() throws Exception {

@@ -16,7 +16,7 @@ public class MessageTest {
 
     @Before
     public void createConnection() throws Exception {
-        this.conn = new ConnectionHandler().getGoogleChromeCloudConnectionInstance();
+        this.conn = new ConnectionHandler().getAzureConnectionInstance();
     }
 
     @Test
