@@ -1,4 +1,4 @@
-package com.ftchat.friend;
+package com.ftchat.backend.friends;
 
 public class Friend {
     private int id;
