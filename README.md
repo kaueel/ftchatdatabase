@@ -5,6 +5,7 @@
 #### Informações úteis:
 * Trello (Scrum): [https://trello.com/b/660bPp1i/projeto-ftchat](https://trello.com/b/660bPp1i/projeto-ftchat)
 * Repositório do git: [https://github.com/kaueel/ftchatdatabase](https://github.com/kaueel/ftchatdatabase)
+* Diagrama de class do projeto: https://drive.google.com/file/d/0B2Akc0tR3AnBV3ZuZnVWbGxQSm8/view?usp=sharing
 
 ### Passo a passo:
 - Entre no site do Trello
