@@ -1,6 +1,8 @@
 package com.ftchat.backend.user;
 
-public class User {
+import com.ftchat.backend.serializable.SerializableObject;
+
+public class User extends SerializableObject {
     private int id;
     private String name;
     private String password;
