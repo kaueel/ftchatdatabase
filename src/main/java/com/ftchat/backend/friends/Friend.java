@@ -1,6 +1,8 @@
 package com.ftchat.backend.friends;
 
-public class Friend {
+import com.ftchat.backend.serializable.SerializableObject;
+
+public class Friend extends SerializableObject {
     private int id;
     private int user_primary;
     private int user_secondary;

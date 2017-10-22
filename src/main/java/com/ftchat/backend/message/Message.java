@@ -1,6 +1,10 @@
 package com.ftchat.backend.message;
 
-public class Message {
+import com.ftchat.backend.serializable.SerializableObject;
+
+import java.io.Serializable;
+
+public class Message extends SerializableObject {
     private int id;
     private int sender;
     private int receiver;

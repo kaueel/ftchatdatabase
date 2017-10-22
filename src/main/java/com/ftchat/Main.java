@@ -1,30 +1,10 @@
 package com.ftchat;
 
-import com.ftchat.backend.message.Message;
-import com.ftchat.backend.message.MessageTest;
-import org.junit.experimental.ParallelComputer;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
+import com.ftchat.frontend.Chat.Chat;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        Class[] cls = {MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class,
-                MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class, MessageTest.class};
-
-        Result result = JUnitCore.runClasses(new ParallelComputer(true, true), cls);
-        System.out.println("Falhas: " + result.getFailureCount());
-        System.out.println("Testes: " + result.getRunCount());
-        System.out.println("Tempo de execução: " + result.getRunTime());
-        System.out.println(result.toString());
+    public static void main(String[] args) {
+        Chat chat = new Chat();
+        chat.Show();
     }
 }
