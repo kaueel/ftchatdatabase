@@ -1,0 +1,9 @@
+com.ftchat
+com.ftchat.backend.dao
+com.ftchat.backend.friends
+com.ftchat.backend.message
+com.ftchat.backend.serializable
+com.ftchat.backend.user
+com.ftchat.frontend.Chat
+com.ftchat.frontend.Login
+com.ftchat.frontend.Resources
