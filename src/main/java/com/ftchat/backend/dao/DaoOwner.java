@@ -107,6 +107,7 @@ public class DaoOwner {
     public ArrayList<SerializableObject> executeFtpGet(String filename) throws Exception {
         try {
             ArrayList<SerializableObject> response = new ArrayList<>();
+            this.ftpConnection.setFileType(this.ftpConnection.BINARY_FILE_TYPE);
             InputStream fileInputStream = this.ftpConnection.retrieveFileStream(filename + ".txt");
 
             try {
@@ -131,6 +132,7 @@ public class DaoOwner {
 
         ArrayList<SerializableObject> objectList = this.executeFtpGet(filename);
         objectList.add(objectToInsert);
+        this.ftpConnection.setFileType(this.ftpConnection.BINARY_FILE_TYPE);
         OutputStream fileOutputStream = this.ftpConnection.storeFileStream(filename + ".txt");
         System.out.println(Arrays.toString(this.ftpConnection.getReplyStrings()));
         ObjectOutputStream objectToFileStream = new ObjectOutputStream(fileOutputStream);
