@@ -1,10 +1,9 @@
 package com.ftchat;
 
-import com.ftchat.frontend.Chat.Chat;
+import com.ftchat.Controllers.Login.Login;
 
 public class Main {
     public static void main(String[] args) {
-        Chat chat = new Chat();
-        chat.Show();
+        Login.showLogin();
     }
 }

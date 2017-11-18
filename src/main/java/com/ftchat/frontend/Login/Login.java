@@ -35,15 +35,22 @@ public class Login {
     private JFrame frame;
     private JTextField txtLogin;
     private JPasswordField passwordField;
-
+    private JLabel lblErro;
     /**
      * Launch the application.
      */
 
     public void Show() {
         try {
-            Login window = new Login();
-            window.frame.setVisible(true);
+            this.frame.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void Hide() {
+        try {
+            frame.setVisible(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,6 +137,8 @@ public class Login {
         passwordField.setBounds(49, 167, 346, 39);
         frame.getContentPane().add(passwordField);
 
+
+
         JButton btnNewButton = new JButton("Cadastrar-se");
         btnNewButton.setForeground(SystemColor.control);
         btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -138,7 +147,7 @@ public class Login {
         btnNewButton.setBorder(BorderFactory.createLineBorder(Color.white));
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-
+                cadastrar();
             }
         });
         btnNewButton.setBounds(49, 229, 170, 39);
@@ -149,12 +158,25 @@ public class Login {
         btnEntrar.setBounds(225, 229, 170, 39);
         btnEntrar.setBackground(new java.awt.Color(51, 204, 255));
         btnEntrar.setBorder(null);
+        btnEntrar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent arg0) {
+                entrar();
+            }
+        });
 
         frame.getContentPane().add(btnEntrar);
 
         Component horizontalGlue = Box.createHorizontalGlue();
         horizontalGlue.setBounds(10, 46, 1, 1);
         frame.getContentPane().add(horizontalGlue);
+
+        lblErro = new JLabel(" ");
+        lblErro.setHorizontalAlignment(SwingConstants.CENTER);
+        lblErro.setFont(new Font("Arial", Font.BOLD, 13));
+        lblErro.setForeground(Color.WHITE);
+        lblErro.setBounds(10, 279, 430, 14);
+        frame.getContentPane().add(lblErro);
 
         JLabel lblNewLabel_1 = new JLabel("");
         lblNewLabel_1.addMouseListener(new MouseAdapter() {
@@ -175,6 +197,8 @@ public class Login {
         frame.setUndecorated(true);
         frame.setAutoRequestFocus(false);
         CenteredFrame(frame);
+
+
 
     }
 
@@ -207,5 +231,21 @@ public class Login {
         int iCoordX = (objDimension.width - objFrame.getWidth()) / 2;
         int iCoordY = (objDimension.height - objFrame.getHeight()) / 2;
         objFrame.setLocation(iCoordX, iCoordY);
+    }
+
+    private void entrar(){
+        if(passwordField.getText().equals("") || passwordField.getText().equals("Senha") || txtLogin.getText().equals("")||txtLogin.getText().equals("Login")){
+            printerro("Preencha os dados corretamente!");
+        }else{
+            com.ftchat.Controllers.Login.Login.validarLogin(this,txtLogin.getText(),passwordField.getText());
+        }
+    }
+
+    private void cadastrar(){
+        com.ftchat.Controllers.Login.Login.Cadastrar(this);
+    }
+
+    public void printerro(String erro){
+        lblErro.setText(erro);
     }
 }

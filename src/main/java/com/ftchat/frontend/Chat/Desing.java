@@ -7,10 +7,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
 
 public abstract class Desing{
@@ -43,6 +40,7 @@ public abstract class Desing{
     protected JLabel lblContatos;
     protected JLabel lblContatoNome;
     protected JLabel lblcontatoMatriz;
+    protected JLabel lblNewLabel;
     //JTextArea
     protected JTextArea textArea;
     protected JTextArea textAreaMessage;
@@ -111,7 +109,7 @@ public abstract class Desing{
         textAreaMessage.setBounds(30, 6, 401, 95);
         textAreaMessage.setWrapStyleWord(true);
         textAreaMessage.setLineWrap(true);
-
+        textAreaMessage.addKeyListener(new KeyAdapter() {@Override public void keyPressed(KeyEvent arg0) {keyPress(arg0);}});
         Border border = BorderFactory.createLineBorder(new java.awt.Color(240,240,240));
         textAreaMessage.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
@@ -124,9 +122,7 @@ public abstract class Desing{
         btnNewButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                addNewMessageLeft(textAreaMessage.getText());       //  Chama funcao enviar nova mensagem
-                addNewMessageRight(textAreaMessage.getText());      //
-
+              sendMessage();
             }
         });
         btnNewButton.setBounds(502, 40, 90, 45);
@@ -178,6 +174,15 @@ public abstract class Desing{
         horizontalScrollBar.setVisible(false);
         horizontalScrollBar.setOpaque(false);
         horizontalScrollBar.setUI(new MyScrollBarUI());
+        /**
+         *lblNewLabel
+         */
+         lblNewLabel = new JLabel("");
+         lblNewLabel.setBounds(0, 0, 183, 48);
+         ImageIcon imageIcon = new ImageIcon("C:\\Users\\Vinicius\\Documents\\logo_FTSpeack2.png"); // load the image to a imageIcon
+         Image image = imageIcon.getImage(); // transform it
+         Image newimg = image.getScaledInstance(lblNewLabel.getWidth(), lblNewLabel.getHeight(),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+         lblNewLabel.setIcon(new ImageIcon(newimg));
 
         /**
          * panelMessagens
@@ -189,6 +194,7 @@ public abstract class Desing{
         panelMessagensGlobal.add(topPanelMessagens);
         panelMessagensGlobal.add(scrollPane);
         panelMessagensGlobal.add(paneltextMessage);
+        panelMessagensGlobal.add(lblNewLabel);
         /**
          * lblContatos
          */
@@ -382,6 +388,8 @@ public abstract class Desing{
     protected abstract void resizeWindows();
     protected abstract void resizeContatos();
     protected abstract void resizeTextMessage();
+    protected abstract void sendMessage();
+    protected abstract void keyPress(KeyEvent arg0);
     public abstract void addNewMessageLeft(String message);
     public abstract void addNewMessageRight(String message);
 

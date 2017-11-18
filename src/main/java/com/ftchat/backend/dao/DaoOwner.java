@@ -24,8 +24,12 @@ public class DaoOwner {
         this.conn = conn;
     }
 
-    public DaoOwner(FTPClient ftpConnection) {
-        this.ftpConnection = ftpConnection;
+    public DaoOwner() {
+        try {
+            this.ftpConnection = new ConnectionHandler().getFtpConnectionInstance();
+        } catch (Exception e) {
+            System.out.println("dbConnectionError");
+        }
     }
 
     protected ArrayList<Map<String, String>> executeQuery(String query) throws Exception {
@@ -106,20 +110,20 @@ public class DaoOwner {
 
     public ArrayList<SerializableObject> executeFtpGet(String filename) throws Exception {
         try {
-            ArrayList<SerializableObject> response = new ArrayList<>();
+            ArrayList<SerializableObject> response = null;
             this.ftpConnection.setFileType(this.ftpConnection.BINARY_FILE_TYPE);
-            InputStream fileInputStream = this.ftpConnection.retrieveFileStream(filename + ".txt");
+            InputStream fileInputStream = this.ftpConnection.retrieveFileStream(filename + ".ser");
 
             try {
                 ObjectInputStream fileToObjectStream = new ObjectInputStream(fileInputStream);
                 response = (ArrayList<SerializableObject>) fileToObjectStream.readObject();
                 fileToObjectStream.close();
-            } catch (EOFException e) {
+            } catch (Exception e) {
             }
-
-            fileInputStream.close();
-            this.ftpConnection.completePendingCommand();
-
+            if(fileInputStream != null) {
+                fileInputStream.close();
+                this.ftpConnection.completePendingCommand();
+            }
             return response;
         } catch (FTPConnectionClosedException e) {
             throw e;
@@ -127,13 +131,17 @@ public class DaoOwner {
     }
 
     public SerializableObject executeFtpInsert(String filename, SerializableObject objectToInsert) throws Exception {
-        if (!this.fileExists(filename + ".txt"))
+        if (!this.fileExists(filename + ".ser"))
             this.executeFtpCreate(filename);
 
         ArrayList<SerializableObject> objectList = this.executeFtpGet(filename);
+
+        if(objectList == null)
+            objectList = new ArrayList<>();
+
         objectList.add(objectToInsert);
         this.ftpConnection.setFileType(this.ftpConnection.BINARY_FILE_TYPE);
-        OutputStream fileOutputStream = this.ftpConnection.storeFileStream(filename + ".txt");
+        OutputStream fileOutputStream = this.ftpConnection.storeFileStream(filename + ".ser");
         System.out.println(Arrays.toString(this.ftpConnection.getReplyStrings()));
         ObjectOutputStream objectToFileStream = new ObjectOutputStream(fileOutputStream);
         objectToFileStream.writeObject(objectList);
@@ -144,12 +152,12 @@ public class DaoOwner {
     }
 
     public boolean executeFtpCreate(String filename) throws Exception {
-        if (this.fileExists(filename + ".txt"))
+        if (this.fileExists(filename + ".ser"))
             return true;
 
-        File firstLocalFile = new File(filename + ".txt");
+        File firstLocalFile = new File(filename + ".ser");
         if (firstLocalFile.createNewFile()) {
-            String firstRemoteFile = filename + ".txt";
+            String firstRemoteFile = filename + ".ser";
             InputStream inputStream = new FileInputStream(firstLocalFile);
             boolean status = this.ftpConnection.storeFile(firstRemoteFile, inputStream);
             inputStream.close();

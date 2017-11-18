@@ -21,7 +21,7 @@ public class DaoOwnerTest {
     @Before
     public void createConnection() throws Exception {
         this.conn = new ConnectionHandler().getFtpConnectionInstance();
-        this.dao = new DaoOwner(this.conn);
+        this.dao = new DaoOwner();
     }
 
     @Test

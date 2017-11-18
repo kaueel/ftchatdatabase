@@ -9,8 +9,7 @@ import java.awt.RenderingHints;
 
 import javax.swing.JFrame;
 
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -19,8 +18,6 @@ import java.awt.ComponentOrientation;
 import java.awt.SystemColor;
 import javax.swing.JLabel;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.awt.Frame;
@@ -57,39 +54,6 @@ public class Chat extends com.ftchat.frontend.Chat.Desing{
     public Chat() {
 
         initialize();
-        /**
-         * teste
-         */
-        addContato("Vinicius Cazelli Ferreira", 1);
-        addContato("Kaue Eufrosino Lima", 2);
-        addContato("Japa", 2);
-        addContato("Vinicius Cazelli Ferreira", 1);
-        addContato("Kaue Eufrosino Lima", 2);
-        addContato("Japa", 2);
-        addContato("Vinicius Cazelli Ferreira", 1);
-        addContato("Kaue Eufrosino Lima", 2);
-        addContato("Japa", 2);
-        addContato("Vinicius Cazelli Ferreira", 1);
-        addContato("Kaue Eufrosino Lima", 2);
-        addContato("Japa", 2);
-        addContato("Vinicius Cazelli Ferreira", 1);
-        addContato("Kaue Eufrosino Lima", 2);
-        addContato("Japa", 2);
-        addContato("Vinicius Cazelli Ferreira", 1);
-        addContato("Kaue Eufrosino Lima", 2);
-        addContato("Japa", 2);
-        addContato("Vinicius Cazelli Ferreira", 1);
-        addContato("Kaue Eufrosino Lima", 2);
-        addContato("Japa", 2);
-        addContato("Vinicius Cazelli Ferreira", 1);
-        addContato("Kaue Eufrosino Lima", 2);
-        addContato("Japa", 2);
-        addContato("Vinicius Cazelli Ferreira", 1);
-        addContato("Kaue Eufrosino Lima", 2);
-        addContato("Japa", 2);
-        addContato("Vinicius Cazelli Ferreira", 1);
-        addContato("Kaue Eufrosino Lima", 2);
-        addContato("Japa", 2);
 
     }
 
@@ -120,6 +84,21 @@ public class Chat extends com.ftchat.frontend.Chat.Desing{
     }
 
     }
+
+    protected void sendMessage()
+    {
+        addNewMessageLeft(textAreaMessage.getText());       //  Chama funcao enviar nova mensagem
+        addNewMessageRight(textAreaMessage.getText());      // Chama funcao enviar nova mensagems
+    }
+
+    protected void keyPress(KeyEvent ke) {
+        if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+            sendMessage();
+            ke.consume();
+        }
+    }
+
+
     /**
      * metodo responsalve pelo recalculo quando alterado o tamanho da aba de contato
      */
@@ -132,7 +111,7 @@ public class Chat extends com.ftchat.frontend.Chat.Desing{
             panelContatos.setBounds(0, 0, frmFtchat.getWidth()/2, frmFtchat.getHeight());
         }
 
-
+        lblNewLabel.setBounds((panelMessagensGlobal.getWidth()-183)/2, (panelMessagensGlobal.getHeight()-48)/2, 183, 48);
         panelMessagensGlobal.setBounds(0, 0, frmFtchat.getWidth()-panelContatos.getWidth(), frmFtchat.getHeight());
         panelContatos.setBounds(panelMessagensGlobal.getWidth(), 0, panelContatos.getWidth(), frmFtchat.getHeight());
         topPanelContatos.setBounds(0, 0, panelContatos.getWidth(), topPanelMessagens.getHeight());
@@ -159,7 +138,13 @@ public class Chat extends com.ftchat.frontend.Chat.Desing{
      * 	Metodos adição mensagem recebidas (a esquerda)
      */
 
+    public void setnameContatoConversaAtual(String nome){
+        lblContatoNome.setText(nome);
+    }
 
+    public void setVisibleImgLogo(boolean visible){
+
+    }
 
     public  void clearAllMessage(){
         panelMessagens.removeAll();
@@ -209,13 +194,13 @@ public class Chat extends com.ftchat.frontend.Chat.Desing{
     /**
      * 	metodo para adicionar o nome do amigo na lista
      */
-    public void addContato(String ContatoNome,int idContato) {
+    public void addContato(String fulname,String username) {
 
 
-        lblcontatoMatriz = new JLabel(ContatoNome);
+        lblcontatoMatriz = new JLabel(fulname);
         lblcontatoMatriz.setFont(new Font("Arial", Font.PLAIN, 16));
         lblcontatoMatriz.setForeground(Color.LIGHT_GRAY);
-        lblcontatoMatriz.setName(""+idContato);
+        lblcontatoMatriz.setName(username);
         Contatos.add(lblcontatoMatriz, "cell 0 "+countcontatos);
 
         countcontatos++;
