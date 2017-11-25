@@ -1,5 +1,4 @@
-package com.ftchat.frontend.Login;
-
+package com.ftchat.frontend.Chat;
 
 import java.awt.EventQueue;
 import java.awt.Image;
@@ -27,19 +26,19 @@ import javax.swing.Box;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
-import com.ftchat.Controllers.ControllerOwner;
 import com.ftchat.frontend.Resources.FocusTraversalOnArray;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class Login {
+public class AdicionarNovoAmigo {
 
     private JFrame frame;
     private JTextField txtLogin;
-    private JPasswordField passwordField;
+    private com.ftchat.Controllers.Chat.Chat Controller;
     private JLabel lblErro;
-    private com.ftchat.Controllers.Login.Login controller;
+    private AdicionarNovoAmigo frm = this;
     /**
      * Launch the application.
      */
@@ -52,19 +51,18 @@ public class Login {
         }
     }
 
-    public void Hide() {
-        try {
-            frame.dispose();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void Hide(){
+        this.frame.dispose();
     }
 
+    public boolean getVisible(){
+        return frame.isVisible();
+    }
     /**
      * Create the application.
      */
-    public Login(com.ftchat.Controllers.Login.Login controller) {
-        this.controller = controller;
+    public AdicionarNovoAmigo(com.ftchat.Controllers.Chat.Chat Controller) {
+        this.Controller = Controller;
         initialize();
         frame.requestFocusInWindow();
     }
@@ -73,14 +71,14 @@ public class Login {
      * Initialize the contents of the frame.
      */
     public void focusGained(FocusEvent arg0) {
-        if(txtLogin.getText() == "Login") {
+        if(txtLogin.getText() == "username") {
             txtLogin.setText("");
         }
     }
 
     public void focusLost(FocusEvent e) {
         if(txtLogin.getText() == "") {
-            txtLogin.setText("Login");
+            txtLogin.setText("username");
         }
     }
 
@@ -104,71 +102,31 @@ public class Login {
             }
         });
         txtLogin.setFont(new Font("Arial", Font.PLAIN, 18));
-        txtLogin.setText("Login");
+        txtLogin.setText("username");
         txtLogin.setForeground(SystemColor.control);
         txtLogin.setBackground(new java.awt.Color(60,70,78));
         txtLogin.setBorder(null);
         txtLogin.setBorder(BorderFactory.createCompoundBorder(txtLogin.getBorder(),BorderFactory.createEmptyBorder(0, 20, 0, 0)));
-        txtLogin.setBounds(49, 117, 346, 39);
+        txtLogin.setBounds(49, 98, 346, 39);
 
         frame.getContentPane().add(txtLogin);
         txtLogin.setColumns(10);
-
-        JLabel lblNewLabel = new JLabel("");
-        lblNewLabel.setBounds(129, 37, 183, 48);
         ImageIcon imageIcon = new ImageIcon("logo_FTSpeack.png"); // load the image to a imageIcon
-        Image image = imageIcon.getImage(); // transform it
-        Image newimg = image.getScaledInstance(lblNewLabel.getWidth(), lblNewLabel.getHeight(),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
-        lblNewLabel.setIcon(new ImageIcon(newimg));
+        Image image = imageIcon.getImage();
 
-        frame.getContentPane().add(lblNewLabel);
-
-        passwordField = new JPasswordField();
-        passwordField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent arg0) {
-                passwordFieldFocusGained(arg0);
-            }
-            @Override
-            public void focusLost(FocusEvent e) {
-                passwordFieldFocusLost(e);
-            }
-        });
-        passwordField.setText("Senha");
-        passwordField.setForeground(SystemColor.control);
-        passwordField.setBackground(new java.awt.Color(60,70,78));
-        passwordField.setBorder(null);
-        passwordField.setBorder(BorderFactory.createCompoundBorder(txtLogin.getBorder(),BorderFactory.createEmptyBorder(0, 0, 0, 0)));
-        passwordField.setBounds(49, 167, 346, 39);
-        frame.getContentPane().add(passwordField);
-
-
-
-        JButton btnNewButton = new JButton("Cadastrar-se");
-        btnNewButton.setForeground(SystemColor.control);
-        btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
-
-        btnNewButton.setBackground(new java.awt.Color(43,50,56));
-        btnNewButton.setBorder(BorderFactory.createLineBorder(Color.white));
-        btnNewButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                cadastrar();
-            }
-        });
-        btnNewButton.setBounds(49, 229, 170, 39);
-        frame.getContentPane().add(btnNewButton);
-
-        JButton btnEntrar = new JButton("Entrar");
-        btnEntrar.setFont(new Font("Arial", Font.PLAIN, 16));
-        btnEntrar.setBounds(225, 229, 170, 39);
-        btnEntrar.setBackground(new java.awt.Color(80,157,225));
-        btnEntrar.setBorder(null);
+        JButton btnEntrar = new JButton("Adicionar");
         btnEntrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent arg0) {
-                entrar();
+                if(!txtLogin.getText().equals("") && !txtLogin.getText().equals("username")){
+                    Controller.AddFriend(txtLogin.getText());
+                }
             }
         });
+        btnEntrar.setFont(new Font("Arial", Font.PLAIN, 16));
+        btnEntrar.setBounds(225, 160, 170, 39);
+        btnEntrar.setBackground(new java.awt.Color(80,157,225));
+        btnEntrar.setBorder(null);
 
         frame.getContentPane().add(btnEntrar);
 
@@ -176,58 +134,59 @@ public class Login {
         horizontalGlue.setBounds(10, 46, 1, 1);
         frame.getContentPane().add(horizontalGlue);
 
-        lblErro = new JLabel(" ");
-        lblErro.setHorizontalAlignment(SwingConstants.CENTER);
-        lblErro.setFont(new Font("Arial", Font.BOLD, 13));
-        lblErro.setForeground(Color.WHITE);
-        lblErro.setBounds(10, 279, 430, 14);
-        frame.getContentPane().add(lblErro);
-
         JLabel lblNewLabel_1 = new JLabel("");
         lblNewLabel_1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent arg0) {
-                System.exit(0);
+                Hide();
             }
         });
         lblNewLabel_1.setIcon(new ImageIcon("close.png"));
-        lblNewLabel_1.setBounds(410, 11, 25, 36);
+        lblNewLabel_1.setBounds(408, 11, 32, 36);
         Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
         lblNewLabel_1.setCursor(cursor);
 
         frame.getContentPane().add(lblNewLabel_1);
-        frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{lblNewLabel, txtLogin, passwordField, btnEntrar, btnNewButton, horizontalGlue}));
-        frame.setBounds(100, 100, 450, 310);
+
+        lblErro = new JLabel("");
+        lblErro.setHorizontalAlignment(SwingConstants.CENTER);
+        lblErro.setFont(new Font("Arial", Font.BOLD, 13));
+        lblErro.setForeground(Color.WHITE);
+        lblErro.setBounds(10, 219, 430, 14);
+        frame.getContentPane().add(lblErro);
+
+        JLabel lblNewLabel = new JLabel("Adicionar um novo amigo");
+        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        lblNewLabel.setForeground(Color.WHITE);
+        lblNewLabel.setBounds(49, 28, 346, 39);
+        frame.getContentPane().add(lblNewLabel);
+
+        JButton button = new JButton("Cancelar");
+        button.setForeground(SystemColor.menu);
+        button.setFont(new Font("Arial", Font.PLAIN, 16));
+        button.setBorder(new LineBorder(SystemColor.control));
+        button.setBackground(new Color(43, 50, 56));
+        button.setBounds(49, 160, 170, 39);
+        frame.getContentPane().add(button);
+        frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtLogin, btnEntrar, horizontalGlue}));
+        frame.setBounds(100, 100, 450, 250);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setUndecorated(true);
         frame.setAutoRequestFocus(false);
         CenteredFrame(frame);
 
-
-
     }
 
     private void txtLoginFocusGained(java.awt.event.FocusEvent evt) {
-        if(txtLogin.getText().equals("Login")){
+        if(txtLogin.getText().equals("username")){
             txtLogin.setText("");
         }
     }
 
     private void txtLoginFocusLost(java.awt.event.FocusEvent evt) {
         if(txtLogin.getText().equals("")){
-            txtLogin.setText("Login");
-        }
-    }
-
-    private void passwordFieldFocusGained(java.awt.event.FocusEvent evt) {
-        if(passwordField.getText().equals("Senha")){
-            passwordField.setText("");
-        }
-    }
-
-    private void passwordFieldFocusLost(java.awt.event.FocusEvent evt) {
-        if(passwordField.getText().equals("")){
-            passwordField.setText("Senha");
+            txtLogin.setText("username");
         }
     }
 
@@ -236,18 +195,6 @@ public class Login {
         int iCoordX = (objDimension.width - objFrame.getWidth()) / 2;
         int iCoordY = (objDimension.height - objFrame.getHeight()) / 2;
         objFrame.setLocation(iCoordX, iCoordY);
-    }
-
-    private void entrar(){
-        if(passwordField.getText().equals("") || passwordField.getText().equals("Senha") || txtLogin.getText().equals("")||txtLogin.getText().equals("Login")){
-            printerro("Preencha os dados corretamente!");
-        }else{
-            controller.validarLogin(txtLogin.getText(),passwordField.getText());
-        }
-    }
-
-    private void cadastrar(){
-        controller.Cadastrar();
     }
 
     public void printerro(String erro){

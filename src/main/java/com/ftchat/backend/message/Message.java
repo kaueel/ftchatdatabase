@@ -1,42 +1,38 @@
 package com.ftchat.backend.message;
 
 import com.ftchat.backend.serializable.SerializableObject;
+import com.ftchat.backend.user.User;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAccessor;
 
 public class Message extends SerializableObject {
     private int id;
-    private int sender;
-    private int receiver;
+    private String sender;
     private String content;
-    private String date;
+    private TemporalAccessor date;
 
-    public Message(int id, int sender, int receiver, String content, String date) {
-        this.id = id;
+    public Message( String sender, String content, TemporalAccessor date) {
         this.sender = sender;
-        this.receiver = receiver;
         this.content = content;
         this.date = date;
     }
 
-    public Message(int sender, int receiver, String content) {
-        this.id = 0;
+    public Message(String sender, String content) {
         this.sender = sender;
-        this.receiver = receiver;
         this.content = content;
+        this.date = LocalDateTime.now();
     }
 
     public int getId() {
         return id;
     }
 
-    public int getSender() {
+    public String getSender() {
         return sender;
     }
 
-    public int getReceiver() {
-        return receiver;
-    }
 
     public String getContent() {
 
@@ -47,20 +43,16 @@ public class Message extends SerializableObject {
         this.content = content;
     }
 
-    public String getDate() {
+    public TemporalAccessor getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
 
     @Override
     public String toString() {
         return "Message{" +
                 "id=" + id +
                 ", sender=" + sender +
-                ", receiver=" + receiver +
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 '}';

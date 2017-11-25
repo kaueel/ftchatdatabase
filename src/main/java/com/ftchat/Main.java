@@ -4,6 +4,7 @@ import com.ftchat.Controllers.Login.Login;
 
 public class Main {
     public static void main(String[] args) {
-        Login.showLogin();
+        Login login = new Login(null,null,null,null);
+        login.showLogin();
     }
 }

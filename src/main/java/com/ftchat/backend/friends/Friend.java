@@ -1,36 +1,38 @@
 package com.ftchat.backend.friends;
 
 import com.ftchat.backend.serializable.SerializableObject;
+import com.ftchat.backend.user.User;
+
 
 public class Friend extends SerializableObject {
     private int id;
-    private int user_primary;
-    private int user_secondary;
+    private User user;
 
-    public Friend(int id,int user_primary, int user_secondary){
+    public Friend(int id,User user){
         this.id = id;
-        this.user_primary = user_primary;
-        this.user_secondary = user_secondary;
+        this.user = user;
+    }
+
+    public Friend(User user){
+
+        this.user= user;
     }
 
     public int getId() {
         return id;
     }
 
-    public int getUser_primary() {
-        return user_primary;
+    public User getUser() {
+        return user;
     }
 
-    public int getUser_secondary() {
-        return user_secondary;
-    }
+
 
     @Override
     public String toString() {
         return "Friend{" +
                 "id=" + id +
-                ", user_primary=" + user_primary +
-                ", user_secondary=" + user_secondary + '\'' +
+                ", user=" + user + '\'' +
                 '}';
     }
 }

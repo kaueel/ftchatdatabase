@@ -1,45 +1,60 @@
 package com.ftchat.Controllers.Login;
 
+import com.ftchat.Controllers.ControllerOwner;
 import com.ftchat.backend.user.User;
 import com.ftchat.backend.user.UserDaoImpl;
 import com.ftchat.Controllers.Cadastrar.Cadastrar;
+import com.ftchat.frontend.Cadastro.Cadastro;
+import com.ftchat.frontend.Chat.AdicionarNovoAmigo;
 import com.ftchat.frontend.Chat.Chat;
 
 import java.util.List;
 
-public class Login {
+public class Login extends ControllerOwner{
 
-
-    public static void showLogin(){
-        com.ftchat.frontend.Login.Login frm = new com.ftchat.frontend.Login.Login();
-        frm.Show();
+    public Login(com.ftchat.frontend.Login.Login frmlogin, Cadastro frmcaCadastro, com.ftchat.frontend.Chat.Chat frmChat, AdicionarNovoAmigo frmAddFriends){
+        this.frmLogin = frmlogin;
+        this.frmCadastro = frmcaCadastro;
+        this.frmChat = frmChat;
+        this.frmAddFriends = frmAddFriends;
     }
 
-    public static void validarLogin(com.ftchat.frontend.Login.Login frm,String username, String password){
+    public void showLogin(){
+        frmLogin = new com.ftchat.frontend.Login.Login(this);
+        frmLogin.Show();
+    }
+
+    public void validarLogin(String username, String password){
         UserDaoImpl userDao = new UserDaoImpl();
         try {
             List<User> users = userDao.getAllUsers();
 
             if(users == null){
-                frm.printerro("Usuario e/ou senha incorretos!");
+                frmLogin.printerro("Usuario e/ou senha incorretos!");
             }else{
                 for (User user:users) {
                     if(username.equals(user.getName()) && user.validPassword(password)){
-                        com.ftchat.Controllers.Chat.Chat chat = new com.ftchat.Controllers.Chat.Chat(user);
+                        frmLogin.Hide();
+                        com.ftchat.Controllers.Chat.Chat chat = new com.ftchat.Controllers.Chat.Chat(user,frmLogin,frmCadastro,frmChat,frmAddFriends);
                         return;
                     }
                 }
-                frm.printerro("Usuario e/ou senha incorretos!");
+                frmLogin.printerro("Usuario e/ou senha incorretos!");
             }
         }catch (Exception ex) {
-            frm.printerro("Usuario e/ou senha incorretos!");
+            frmLogin.printerro("Usuario e/ou senha incorretos!");
             //System.out.println(ex.toString());
         }
     }
 
-    public  static void Cadastrar(com.ftchat.frontend.Login.Login frm){
-        frm.Hide();
-        Cadastrar.showLogin();
+    public  void Cadastrar(){
+        frmLogin.Hide();
+        if(frmCadastro == null){
+            Cadastrar cadastro = new Cadastrar(frmLogin,frmCadastro,frmChat,frmAddFriends);
+            cadastro.show();
+        }else{
+            frmCadastro.Show();
+        }
     }
 
 

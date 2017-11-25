@@ -1,5 +1,7 @@
 package com.ftchat.frontend.Cadastro;
 
+    import com.ftchat.Controllers.Cadastrar.Cadastrar;
+    import com.ftchat.Controllers.Login.Login;
     import com.ftchat.backend.user.User;
     import com.ftchat.frontend.Resources.FocusTraversalOnArray;
 
@@ -23,6 +25,7 @@ public class Cadastro {
     private JButton Login;
     private JButton Cadastar;
     private JLabel lblErro;
+    private com.ftchat.Controllers.Cadastrar.Cadastrar controller;
     /**
      * Launch the application.
      */
@@ -31,13 +34,14 @@ public class Cadastro {
     }
 
     public void Hide() {
-        this.frame.setVisible(false);
+        this.frame.dispose();
     }
 
     /**
      * Create the application.
      */
-    public Cadastro() {
+    public Cadastro(com.ftchat.Controllers.Cadastrar.Cadastrar controller) {
+        this.controller = controller;
         initialize();
         frame.requestFocusInWindow();
     }
@@ -55,7 +59,7 @@ public class Cadastro {
 
         label = new JLabel("");
         label.setBounds(120, 45, 257, 66);
-        ImageIcon imageIcon = new ImageIcon("C:\\Users\\Vinicius\\Documents\\logo_FTSpeack.png"); // load the image to a imageIcon
+        ImageIcon imageIcon = new ImageIcon("logo_FTSpeack.png"); // load the image to a imageIcon
         Image image = imageIcon.getImage(); // transform it
         Image newimg = image.getScaledInstance(label.getWidth(), label.getHeight(),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         label.setIcon(new ImageIcon(newimg));
@@ -178,7 +182,7 @@ public class Cadastro {
 
         Cadastar = new JButton("Cadastrar");
         Cadastar.setFont(new Font("Arial", Font.PLAIN, 16));
-        Cadastar.setBackground(new java.awt.Color(51, 204, 255));
+        Cadastar.setBackground(new java.awt.Color(80,157,225));
         Cadastar.setBorder(null);
         Cadastar.setBounds(246, 415, 187, 39);
         Cadastar.addMouseListener(new MouseAdapter() {
@@ -199,8 +203,8 @@ public class Cadastro {
                 System.exit(0);
             }
         });
-        lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\Vinicius\\Documents\\close.png"));
-        lblNewLabel_1.setBounds(455, 6, 20, 36);
+        lblNewLabel_1.setIcon(new ImageIcon("close.png"));
+        lblNewLabel_1.setBounds(455, 6, 25, 36);
         Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
         lblNewLabel_1.setCursor(cursor);
         frame.getContentPane().add(lblNewLabel_1);
@@ -233,7 +237,7 @@ public class Cadastro {
     }
 
     private void login(){
-        com.ftchat.Controllers.Login.Login.showLogin();
+        controller.showLogin();
         Hide();
     }
 
@@ -247,13 +251,13 @@ public class Cadastro {
                 txtUsername.getText().equals("Username")||
                 txtNomeCompleto.getText().equals("Nome completo"))
         {
-
+            printerro("Preencha os Valores corretamente");
         }
         else
         {
             if (passwordField.getText().equals(passwordField_1.getText())) {
-                User user = new User(txtNomeCompleto.getText(), txtEmail.getText(), txtNomeCompleto.getText(), passwordField.getText());
-                com.ftchat.Controllers.Cadastrar.Cadastrar.cadastar(user,this);
+                User user = new User(txtUsername.getText(), txtEmail.getText(), txtNomeCompleto.getText(), passwordField.getText());
+                controller.cadastar(user);
             }
         }
     }
