@@ -34,7 +34,7 @@ public class Chat extends ControllerOwner{
 
         this.frmChat.Show();
 
-        loadAllFriends();
+        atualizarContatos();
 
     }
 
@@ -83,6 +83,7 @@ public class Chat extends ControllerOwner{
 
             FriendDaoImpl friendDao = new FriendDaoImpl();
             friends = friendDao.getAllFriends(user);
+            frmChat.clearAllContatos();
             if(friends != null){
 
                 for (Friend friend:friends) {
@@ -92,7 +93,6 @@ public class Chat extends ControllerOwner{
         }catch (Exception ex){
             JOptionPane.showMessageDialog(null,"Erro: "+ ex.getMessage(),".:: FTChat :: Erro ao carregar os amigos ::.",JOptionPane.ERROR_MESSAGE);
         }
-
     }
 
     public void AddFriend(String username){
@@ -157,6 +157,33 @@ public class Chat extends ControllerOwner{
                         frmChat.panelMessagensUpdateui();
 
                         Thread.sleep(5000);
+                    }catch (Exception ex){
+
+                    }
+                }
+            }
+        };
+
+        if(true){
+            th.start();
+        }
+    }
+
+    private void atualizarContatos(){
+
+        stopThreadUpdate();
+
+        th = new Thread() {
+
+            @Override
+            public void run() {
+
+                while(true){
+                    try{
+
+                        loadAllFriends();
+
+                        Thread.sleep(10000);
                     }catch (Exception ex){
 
                     }
