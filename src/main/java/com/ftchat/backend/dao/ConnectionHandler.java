@@ -32,8 +32,8 @@ public class ConnectionHandler {
 
     private FTPClient getFtpConnection() throws Exception {
         FTPClient newFtpInstance = new FTPClient();
-        newFtpInstance.connect("ftp.ftalks.educacao.ws");
-        newFtpInstance.login("ftalks", "FTChat123");
+        newFtpInstance.connect("127.0.0.1");
+        newFtpInstance.login("admin", "123456");
         this.ftpConnectionInstance = newFtpInstance;
         return this.ftpConnectionInstance;
     }

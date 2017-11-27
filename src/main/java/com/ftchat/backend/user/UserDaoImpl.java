@@ -1,6 +1,7 @@
 package com.ftchat.backend.user;
 
 import com.ftchat.backend.dao.DaoOwner;
+import com.ftchat.backend.serializable.SerializableObject;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -13,30 +14,29 @@ public class UserDaoImpl extends DaoOwner implements UserDao {
         super(conn);
     }
 
+    public UserDaoImpl() {
+        super();
+    }
+
     /**
      * Get all the posts from the user table
      */
     @Override
     public List<User> getAllUsers() throws Exception {
-        ArrayList<Map<String, String>> preUsers = this.executeQuery("select id, name from [user]");
-        List<User> response = new ArrayList<>();
-
-        preUsers.forEach((Map<String, String> userRow) -> {
-            User user = new User(
-                    Integer.parseInt(userRow.get("id")),
-                    userRow.get("name")
-            );
-            response.add(user);
-        });
-
+        List<User> response = null;
+        ArrayList<SerializableObject> preUsers = this.executeFtpGet("users");
+        if(preUsers != null) {
+            response= (ArrayList<User>) (ArrayList<?>) preUsers;
+        }
         return response;
     }
 
     @Override
     public User createUser(String name, String password) throws Exception {
         try {
-            ArrayList<Map<String, String>> preId = this.executeQuery("EXEC AddUser @name = '" + name + "', @password = '" + password + "'");
-            return new User(Integer.parseInt(preId.get(0).get("id")), name);
+            User user = new User(name,password);
+            user = (User)this.executeFtpInsert("users",user);
+            return user;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new Exception("dbUpdateFail");
